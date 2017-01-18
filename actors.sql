@@ -1,3 +1,8 @@
+-- actors.sql
+-- kaitlyn cason : 204411394
+-- alexander waz : 504480512
+
+
 /*Step 1:
 	Create a table with the following schema
 	Actors(Name:VARCHAR(40), Movie:VARCHAR(80), Year:INTEGER, Role:VARCHAR(40))*/
