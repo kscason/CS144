@@ -1,10 +1,10 @@
 
 CREATE TABLE Actor (
-    Year INT NOT NULL,
     Name VARCHAR(40),
     Movie VARCHAR(80),
-    Role VARCHAR(40),
-) ENGINE = INNODB;
+    Year INT NOT NULL,
+    Role VARCHAR(40)
+);
 
-LOAD DATA LOCAL INFILE "~/data/actor1.del" INTO TABLE Actor
+LOAD DATA LOCAL INFILE "~/data/actors.csv" INTO TABLE Actor
 FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"';
