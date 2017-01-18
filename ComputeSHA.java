@@ -37,7 +37,7 @@ public class ComputeSHA {
     // returns hash from byte array
     StringBuffer sb = new StringBuffer();
     for (int i = 0; i < d.length; i++) {
-      sb.append(Integer.toHexString(0xFF & d[i]));
+      sb.append(String.format("%02x", (0xFF & d[i])));
     }
 
     System.out.println(sb.toString());
