@@ -216,7 +216,7 @@ class MyParser {
         
         //process_items(nodes);
         //process_users(nodes);
-        //process_bids(nodes);
+        process_bids(nodes);
         // process_categories(nodes);
     }
     
@@ -300,18 +300,15 @@ class MyParser {
     public static void process_bids(NodeList nodes) {
       for (int i = 0; i < nodes.getLength(); i++) {
         Element e = (Element) nodes.item(i);
-        if (getElementTextByTagNameNR(e, "Number_of_Bids") == "0")
-          continue;
-        System.out.println(getElementTextByTagNameNR(e, "Number_of_Bids"));
         NodeList bids = getElementByTagNameNR(e, "Bids").getElementsByTagName("Bid");
-        for (int j = 0; j < nodes.getLength(); j++) {
+        for (int j = 0; j < bids.getLength(); j++) {
           String row = "";
           Element b = (Element) bids.item(j);
           
           row += tuplify(e.getAttribute("ItemID")) + ",";
-          //row += tuplify(getElementByTagNameNR(b, "Bidder").getAttribute("UserID")) + ",";
-          //row += tuplify(timify(getElementTextByTagNameNR(b, "Time"))) + ",";
-          //row += tuplify(strip(getElementTextByTagNameNR(b, "Amount")));// + "\n";
+          row += tuplify(getElementByTagNameNR(b, "Bidder").getAttribute("UserID")) + ",";
+          row += tuplify(timify(getElementTextByTagNameNR(b, "Time"))) + ",";
+          row += tuplify(strip(getElementTextByTagNameNR(b, "Amount")));// + "\n";
 
           System.out.println(row);
         }
