@@ -32,14 +32,38 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.Element;
-import org.w3c.dom.Text;
+//import org.w3c.dom.Document;
+//import org.w3c.dom.Node;
+//import org.w3c.dom.Element;
+//import org.w3c.dom.Text;
+import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.ErrorHandler;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.text.ParseException;
+
+// User object
+
+class User {
+  public String userID_ = "\\N";
+  public String Location_ = "\\N";
+  public String Country_ = "\\N";
+  public String S_Rating_ = "\\N";
+  public String B_Rating_ = "\\N";
+
+  public String stringify() {
+    return "\"" + userID_ + "\",\""
+                + Location_ + "\",\"" + Country_ + "\","
+                + S_Rating_ + "," + B_Rating_ + "\n";
+  }
+}
+
+
+
+// MyParser Implementation
 
 class MyParser {
     
@@ -187,8 +211,61 @@ class MyParser {
         
         /**************************************************************/
         
+        System.out.println("sad");
+        NodeList nodes = doc.getDocumentElement().getElementsByTagName("Item");
+        
+        //process_items(nodes);
+        process_users(nodes);
+        // process_bids(nodes);
+        // process_categories(nodes);
     }
     
+    public static String tuplify(String s) {
+      return s == "" ? "\\N" : "\"" + s + "\"";
+    }
+
+    public static String timify(String t) {
+      SimpleDateFormat t_xml = new SimpleDateFormat("MMM-dd-yy HH:mm:ss");
+      SimpleDateFormat t_sql = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+      try {
+        return t_sql.format(t_xml.parse(t)).toString();
+      } catch (ParseException e) {
+        return "";
+      }
+    }
+
+    public static void process_items(NodeList nodes) {
+      
+      for (int i = 0; i < nodes.getLength(); i++) {
+        String row = "";
+        Element e = (Element) nodes.item(i);
+        
+        row += tuplify(e.getAttribute("ItemID")) + ",";
+        row += tuplify(getElementTextByTagNameNR(e, "Name")) + ",";
+        row += tuplify(strip(getElementTextByTagNameNR(e, "Currently"))) + ",";
+        row += tuplify(strip(getElementTextByTagNameNR(e, "Buy_Price"))) + ",";
+        row += tuplify(strip(getElementTextByTagNameNR(e, "First_Bid"))) + ",";
+        row += tuplify(getElementTextByTagNameNR(e, "Number_of_Bids")) + ",";
+        row += tuplify(getElementTextByTagNameNR(e, "Location")) + ",";
+        row += tuplify(getElementByTagNameNR(e, "Location").getAttribute("Latitude")) + ",";
+        row += tuplify(getElementByTagNameNR(e, "Location").getAttribute("Longitude")) + ",";
+        row += tuplify(getElementTextByTagNameNR(e, "Country")) + ",";
+        row += tuplify(timify(getElementTextByTagNameNR(e, "Started"))) + ",";
+        row += tuplify(timify(getElementTextByTagNameNR(e, "Ends"))) + ",";
+        row += tuplify(getElementByTagNameNR(e, "Seller").getAttribute("UserID")) + ",";
+        row += tuplify(getElementTextByTagNameNR(e, "Description")) + "\n";
+        
+        System.out.println(row);
+      }
+    }
+
+    public static void process_users(NodeList nodes) {
+      for (int i = 0; i < nodes.getLength(); i++) {
+        // bids
+      }
+    }
+
     public static void main (String[] args) {
         if (args.length == 0) {
             System.out.println("Usage: java MyParser [file] [file] ...");
