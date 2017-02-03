@@ -55,9 +55,9 @@ class User {
   public String B_Rating_ = "\\N";
 
   public String stringify() {
-    return "\"" + userID_ + "\",\""
-                + Location_ + "\",\"" + Country_ + "\","
-                + S_Rating_ + "," + B_Rating_ + "\n";
+    return "\"" + userID_ + "\","
+                + Location_ + "," + Country_ + ","
+                + S_Rating_ + "," + B_Rating_;
   }
 }
 
@@ -215,8 +215,8 @@ class MyParser {
         NodeList nodes = doc.getDocumentElement().getElementsByTagName("Item");
         
         //process_items(nodes);
-        process_users(nodes);
-        // process_bids(nodes);
+        //process_users(nodes);
+        //process_bids(nodes);
         // process_categories(nodes);
     }
     
@@ -236,7 +236,6 @@ class MyParser {
     }
 
     public static void process_items(NodeList nodes) {
-      
       for (int i = 0; i < nodes.getLength(); i++) {
         String row = "";
         Element e = (Element) nodes.item(i);
@@ -261,8 +260,61 @@ class MyParser {
     }
 
     public static void process_users(NodeList nodes) {
+      Map<String,User> users = new HashMap<String,User>();
+      
       for (int i = 0; i < nodes.getLength(); i++) {
-        // bids
+        Element e = (Element) nodes.item(i);
+        Element s = getElementByTagNameNR(e, "Seller");
+        if (users.containsKey(s.getAttribute("UserID"))) {
+          users.get(s.getAttribute("UserID")).S_Rating_ = tuplify(s.getAttribute("Rating"));
+        } else {
+          User u = new User();
+          u.userID_ = s.getAttribute("UserID");
+          u.S_Rating_ = tuplify(s.getAttribute("Rating"));
+          users.put(u.userID_, u);
+        }
+        
+        NodeList bids = getElementByTagNameNR(e, "Bids").getElementsByTagName("Bid");
+        for (int j = 0; j < bids.getLength(); j++) {
+          Element b_e = (Element) bids.item(j);
+          Element b = getElementByTagNameNR(b_e, "Bidder");
+          if (users.containsKey(b.getAttribute("UserID"))) {
+            users.get(b.getAttribute("UserID")).Location_ = tuplify(getElementTextByTagNameNR(b, "Location"));
+            users.get(b.getAttribute("UserID")).Country_ = tuplify(getElementTextByTagNameNR(b, "Country"));
+            users.get(b.getAttribute("UserID")).B_Rating_ = tuplify(b.getAttribute("Rating")); 
+          } else {
+            User u = new User();
+            u.userID_ = b.getAttribute("UserID");
+            u.Location_ = tuplify(getElementTextByTagNameNR(b, "Location"));
+            u.Country_ = tuplify(getElementTextByTagNameNR(b, "Country"));
+            u.B_Rating_ = tuplify(b.getAttribute("Rating"));
+          }
+        }
+      }
+
+      for (User u : users.values()) {
+        System.out.println(u.stringify());
+      }
+    }
+
+    public static void process_bids(NodeList nodes) {
+      for (int i = 0; i < nodes.getLength(); i++) {
+        Element e = (Element) nodes.item(i);
+        if (getElementTextByTagNameNR(e, "Number_of_Bids") == "0")
+          continue;
+        System.out.println(getElementTextByTagNameNR(e, "Number_of_Bids"));
+        NodeList bids = getElementByTagNameNR(e, "Bids").getElementsByTagName("Bid");
+        for (int j = 0; j < nodes.getLength(); j++) {
+          String row = "";
+          Element b = (Element) bids.item(j);
+          
+          row += tuplify(e.getAttribute("ItemID")) + ",";
+          //row += tuplify(getElementByTagNameNR(b, "Bidder").getAttribute("UserID")) + ",";
+          //row += tuplify(timify(getElementTextByTagNameNR(b, "Time"))) + ",";
+          //row += tuplify(strip(getElementTextByTagNameNR(b, "Amount")));// + "\n";
+
+          System.out.println(row);
+        }
       }
     }
 
