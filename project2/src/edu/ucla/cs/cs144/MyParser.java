@@ -211,13 +211,13 @@ class MyParser {
         
         /**************************************************************/
         
-        System.out.println("sad");
+        //System.out.println("sad");
         NodeList nodes = doc.getDocumentElement().getElementsByTagName("Item");
         
         //process_items(nodes);
-        process_users(nodes);
+        //process_users(nodes);
         //process_bids(nodes);
-        // process_categories(nodes);
+        //process_categories(nodes);
     }
     
     public static String tuplify(String s) {
@@ -309,7 +309,23 @@ class MyParser {
           row += tuplify(e.getAttribute("ItemID")) + ",";
           row += tuplify(getElementByTagNameNR(b, "Bidder").getAttribute("UserID")) + ",";
           row += tuplify(timify(getElementTextByTagNameNR(b, "Time"))) + ",";
-          row += tuplify(strip(getElementTextByTagNameNR(b, "Amount")));// + "\n";
+          row += tuplify(strip(getElementTextByTagNameNR(b, "Amount"))) + "\n";
+
+          System.out.println(row);
+        }
+      }
+    }
+
+    public static void process_categories(NodeList nodes) {
+      for (int i = 0; i < nodes.getLength(); i++) {
+        Element e = (Element) nodes.item(i);
+        NodeList cats = e.getElementsByTagName("Category");
+        for (int j = 0; j < cats.getLength(); j++) {
+          String row = "";
+          Element c = (Element) cats.item(j);
+
+          row += tuplify(e.getAttribute("ItemID")) + ",";
+          row += tuplify(getElementText(c));// + "\n";
 
           System.out.println(row);
         }
