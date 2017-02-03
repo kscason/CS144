@@ -10,7 +10,7 @@ SELECT COUNT(*) FROM User;
 	Pay special attention to case sensitivity. 
 	You should match the items in "New York" but not in "new york".*/
 SELECT COUNT(*) FROM Item
-	WHERE Location='New York';
+	WHERE BINARY Location='New York';
 
 /*3. Find the number of auctions belonging to exactly four categories.*/
 SELECT COUNT(cat.ItemID) FROM (SELECT c.ItemID FROM Category c
@@ -21,9 +21,10 @@ SELECT COUNT(cat.ItemID) FROM (SELECT c.ItemID FROM Category c
 	Remember that the data was captured at the point in time December 20th, 2001, one second after midnight, 
 	so you can use this time point to decide which auction(s) are current. 
 	Pay special attention to the current auctions without any bid.*/
-SELECT MAX(Amount) FROM Bid b
+SELECT ItemID FROM Bid 
+	WHERE Amount = (SELECT MAX(Amount) as max FROM Bid b
 	WHERE b.ItemID IN (SELECT ItemID FROM Item
-		WHERE Ends >= '2001-12-20 00:00:01');
+		WHERE Ends > '2001-12-20 00:00:01'));
 
 
 /*5. Find the number of sellers whose rating is higher than 1000.*/
