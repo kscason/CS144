@@ -48,11 +48,19 @@ import java.text.ParseException;
 // User object
 
 class User {
-  public String userID_ = "\\N";
-  public String Location_ = "\\N";
-  public String Country_ = "\\N";
-  public String S_Rating_ = "\\N";
-  public String B_Rating_ = "\\N";
+  public String userID_;
+  public String Location_;
+  public String Country_ ;
+  public String S_Rating_;
+  public String B_Rating_;
+
+  public User(String userid) {
+    userID_ = userid;
+    Location_ = "\\N";
+    Country_ = "\\N";
+    S_Rating_ = "\\N";
+    B_Rating_ = "\\N";
+  }
 
   public String stringify() {
     return "|" + userID_ + "|*"
@@ -66,7 +74,9 @@ class User {
 // MyParser Implementation
 
 class MyParser {
-    
+  
+  public static Map<String,User> users = new HashMap<String,User>();
+
     static final String columnSeparator = "|*|";
     static DocumentBuilder builder;
     
@@ -281,16 +291,17 @@ class MyParser {
     }
 
     public static void process_users(NodeList nodes) {
-      Map<String,User> users = new HashMap<String,User>();
       
       for (int i = 0; i < nodes.getLength(); i++) {
         Element e = (Element) nodes.item(i);
         Element s = getElementByTagNameNR(e, "Seller");
         if (users.containsKey(s.getAttribute("UserID"))) {
-          users.get(s.getAttribute("UserID")).S_Rating_ = tuplify(s.getAttribute("Rating"));
+          User u = users.get(s.getAttribute("UserID"));
+          u.S_Rating_ = tuplify(s.getAttribute("Rating"));
+          //users.remove(u.userID_);
+          //users.put(u.userID_, u);
         } else {
-          User u = new User();
-          u.userID_ = s.getAttribute("UserID");
+          User u = new User(s.getAttribute("UserID"));
           u.S_Rating_ = tuplify(s.getAttribute("Rating"));
           users.put(u.userID_, u);
         }
@@ -300,12 +311,14 @@ class MyParser {
           Element b_e = (Element) bids.item(j);
           Element b = getElementByTagNameNR(b_e, "Bidder");
           if (users.containsKey(b.getAttribute("UserID"))) {
-            users.get(b.getAttribute("UserID")).Location_ = tuplify(getElementTextByTagNameNR(b, "Location"));
-            users.get(b.getAttribute("UserID")).Country_ = tuplify(getElementTextByTagNameNR(b, "Country"));
-            users.get(b.getAttribute("UserID")).B_Rating_ = tuplify(b.getAttribute("Rating")); 
+            User u = users.get(b.getAttribute("UserID"));
+            u.Location_ = tuplify(getElementTextByTagNameNR(b, "Location"));
+            u.Country_ = tuplify(getElementTextByTagNameNR(b, "Country"));
+            u.B_Rating_ = tuplify(b.getAttribute("Rating")); 
+            //users.remove(u.userID_);
+            //users.put(u.userID_, u);
           } else {
-            User u = new User();
-            u.userID_ = b.getAttribute("UserID");
+            User u = new User(b.getAttribute("UserID"));
             u.Location_ = tuplify(getElementTextByTagNameNR(b, "Location"));
             u.Country_ = tuplify(getElementTextByTagNameNR(b, "Country"));
             u.B_Rating_ = tuplify(b.getAttribute("Rating"));
