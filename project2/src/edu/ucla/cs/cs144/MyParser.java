@@ -215,8 +215,8 @@ class MyParser {
         NodeList nodes = doc.getDocumentElement().getElementsByTagName("Item");
         
         //process_items(nodes);
-        //process_users(nodes);
-        process_bids(nodes);
+        process_users(nodes);
+        //process_bids(nodes);
         // process_categories(nodes);
     }
     
@@ -288,6 +288,7 @@ class MyParser {
             u.Location_ = tuplify(getElementTextByTagNameNR(b, "Location"));
             u.Country_ = tuplify(getElementTextByTagNameNR(b, "Country"));
             u.B_Rating_ = tuplify(b.getAttribute("Rating"));
+            users.put(u.userID_, u);
           }
         }
       }
