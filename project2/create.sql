@@ -6,8 +6,8 @@ CREATE TABLE User(
 		UserID VARCHAR(40) NOT NULL, 
 		Location VARCHAR(400), 
 		Country VARCHAR(400), 
-		S_Rating INT DEFAULT -1, 
-		B_Rating INT DEFAULT -1,
+		S_Rating INT, 
+		B_Rating INT,
 		PRIMARY KEY(UserID)
 );
 
@@ -15,7 +15,7 @@ CREATE TABLE Item(
 		ItemID INT NOT NULL, 
 		Name VARCHAR(400) NOT NULL, 
 		Currently DECIMAL(8,2) NOT NULL, 
-		Buy_Price DECIMAL(8,2) DEFAULT -1.00, 
+		Buy_Price DECIMAL(8,2), 
 		First_Bid DECIMAL(8,2) NOT NULL, 
 		Number_of_Bids INT NOT NULL, 
 		Location VARCHAR(400) NOT NULL, 
@@ -25,7 +25,7 @@ CREATE TABLE Item(
 		Started TIMESTAMP NOT NULL, 
 		Ends TIMESTAMP NOT NULL, 
 		UserID VARCHAR(40) NOT NULL, 
-		Description VARCHAR(4000) NOT NULL,  #???????? idk if null
+		Description VARCHAR(4000) NOT NULL,
 		PRIMARY KEY(ItemID),
 		FOREIGN KEY (UserID) REFERENCES User(UserID)
 			ON DELETE CASCADE

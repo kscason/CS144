@@ -12,19 +12,18 @@ SELECT COUNT(*) FROM User;
 SELECT COUNT(*) FROM Item
 	WHERE Location='New York';
 
-/*3.Find the number of auctions belonging to exactly four categories.*/
-SELECT COUNT(c.ItemID) FROM Category c
+/*3. Find the number of auctions belonging to exactly four categories.*/
+SELECT COUNT(cat.ItemID) FROM (SELECT c.ItemID FROM Category c
 	GROUP BY c.ItemID
-	HAVING COUNT(c.Category)=4;
+	HAVING COUNT(c.Category)=4) cat;
 
 /*4. Find the ID(s) of current (unsold) auction(s) with the highest bid. 
 	Remember that the data was captured at the point in time December 20th, 2001, one second after midnight, 
 	so you can use this time point to decide which auction(s) are current. 
 	Pay special attention to the current auctions without any bid.*/
-SELECT ItemID FROM (
-	SELECT ItemID FROM Item
-	GROUP BY ItemID ...;
-
+SELECT MAX(Amount) FROM Bid b
+	WHERE b.ItemID IN (SELECT ItemID FROM Item
+		WHERE Ends >= '2001-12-20 00:00:01');
 
 
 /*5. Find the number of sellers whose rating is higher than 1000.*/
@@ -33,11 +32,10 @@ SELECT COUNT(UserID) FROM User
 
 /*6. Find the number of users who are both sellers and bidders.*/
 SELECT COUNT(*) FROM User
-	WHERE S_Rating <> -1
-	AND B_Rating <> -1;
+	WHERE S_Rating IS NOT NULL
+	AND B_Rating IS NOT NULL;
 
 /*7. Find the number of categories that include at least one item with a bid of more than $100.*/
 SELECT COUNT(DISTINCT c.Category) FROM Category c
-	GROUP BY c.Category
 	WHERE c.ItemID IN (SELECT ItemID FROM Item
 		WHERE Number_of_Bids > 0 AND Currently > 100);
