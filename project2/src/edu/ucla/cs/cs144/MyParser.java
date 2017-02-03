@@ -214,10 +214,10 @@ class MyParser {
         //System.out.println("sad");
         NodeList nodes = doc.getDocumentElement().getElementsByTagName("Item");
         
-        //process_items(nodes);
-        //process_users(nodes);
-        //process_bids(nodes);
-        //process_categories(nodes);
+        process_items(nodes);
+        process_users(nodes);
+        process_bids(nodes);
+        process_categories(nodes);
     }
     
     public static String tuplify(String s) {
@@ -236,26 +236,47 @@ class MyParser {
     }
 
     public static void process_items(NodeList nodes) {
-      for (int i = 0; i < nodes.getLength(); i++) {
-        String row = "";
-        Element e = (Element) nodes.item(i);
-        
-        row += tuplify(e.getAttribute("ItemID")) + ",";
-        row += tuplify(getElementTextByTagNameNR(e, "Name")) + ",";
-        row += tuplify(strip(getElementTextByTagNameNR(e, "Currently"))) + ",";
-        row += tuplify(strip(getElementTextByTagNameNR(e, "Buy_Price"))) + ",";
-        row += tuplify(strip(getElementTextByTagNameNR(e, "First_Bid"))) + ",";
-        row += tuplify(getElementTextByTagNameNR(e, "Number_of_Bids")) + ",";
-        row += tuplify(getElementTextByTagNameNR(e, "Location")) + ",";
-        row += tuplify(getElementByTagNameNR(e, "Location").getAttribute("Latitude")) + ",";
-        row += tuplify(getElementByTagNameNR(e, "Location").getAttribute("Longitude")) + ",";
-        row += tuplify(getElementTextByTagNameNR(e, "Country")) + ",";
-        row += tuplify(timify(getElementTextByTagNameNR(e, "Started"))) + ",";
-        row += tuplify(timify(getElementTextByTagNameNR(e, "Ends"))) + ",";
-        row += tuplify(getElementByTagNameNR(e, "Seller").getAttribute("UserID")) + ",";
-        row += tuplify(getElementTextByTagNameNR(e, "Description")) + "\n";
-        
-        System.out.println(row);
+      //Attempt to create items.csv
+      String pathname = "./items.csv";
+      try{
+        File file = new File(pathname);
+        FileWriter fw;
+        //Append if the file already was created
+        if(file.exists())
+          fw = new FileWriter(file, true);
+        else{
+          file.createNewFile();
+          fw = new FileWriter(file);
+        }
+
+        //Create a tuple to add to the csv file
+        for (int i = 0; i < nodes.getLength(); i++) {
+          String row = "";
+          Element e = (Element) nodes.item(i);
+          
+          row += tuplify(e.getAttribute("ItemID")) + ",";
+          row += tuplify(getElementTextByTagNameNR(e, "Name")) + ",";
+          row += tuplify(strip(getElementTextByTagNameNR(e, "Currently"))) + ",";
+          row += tuplify(strip(getElementTextByTagNameNR(e, "Buy_Price"))) + ",";
+          row += tuplify(strip(getElementTextByTagNameNR(e, "First_Bid"))) + ",";
+          row += tuplify(getElementTextByTagNameNR(e, "Number_of_Bids")) + ",";
+          row += tuplify(getElementTextByTagNameNR(e, "Location")) + ",";
+          row += tuplify(getElementByTagNameNR(e, "Location").getAttribute("Latitude")) + ",";
+          row += tuplify(getElementByTagNameNR(e, "Location").getAttribute("Longitude")) + ",";
+          row += tuplify(getElementTextByTagNameNR(e, "Country")) + ",";
+          row += tuplify(timify(getElementTextByTagNameNR(e, "Started"))) + ",";
+          row += tuplify(timify(getElementTextByTagNameNR(e, "Ends"))) + ",";
+          row += tuplify(getElementByTagNameNR(e, "Seller").getAttribute("UserID")) + ",";
+          row += tuplify(getElementTextByTagNameNR(e, "Description")) + "\n";
+          
+          fw.write(row);
+        }
+        fw.close();
+      }
+
+      catch(IOException ex){
+            System.out.println("FAILED: cannot open the file::" + pathname);
+            return;
       }
     }
 
@@ -293,42 +314,105 @@ class MyParser {
         }
       }
 
-      for (User u : users.values()) {
-        System.out.println(u.stringify());
+      //Attempt to create users csv
+      String pathname = "./users.csv";
+      try{
+       File file = new File(pathname);
+        FileWriter fw;
+        //Append if the file already was created
+        if(file.exists())
+          fw = new FileWriter(file, true);
+        else{
+          file.createNewFile();
+          fw = new FileWriter(file);
+        }
+
+        //Add each user tuple to the csv file
+        for (User u : users.values()) {
+          fw.write(u.stringify());
+          fw.write(System.lineSeparator());
+        }
+        fw.close();
+      }
+
+      catch(IOException ex){
+            System.out.println("FAILED: cannot open the file::" + pathname);
+            return;
       }
     }
 
     public static void process_bids(NodeList nodes) {
-      for (int i = 0; i < nodes.getLength(); i++) {
-        Element e = (Element) nodes.item(i);
-        NodeList bids = getElementByTagNameNR(e, "Bids").getElementsByTagName("Bid");
-        for (int j = 0; j < bids.getLength(); j++) {
-          String row = "";
-          Element b = (Element) bids.item(j);
-          
-          row += tuplify(e.getAttribute("ItemID")) + ",";
-          row += tuplify(getElementByTagNameNR(b, "Bidder").getAttribute("UserID")) + ",";
-          row += tuplify(timify(getElementTextByTagNameNR(b, "Time"))) + ",";
-          row += tuplify(strip(getElementTextByTagNameNR(b, "Amount"))) + "\n";
-
-          System.out.println(row);
+      //Attempt to create bids.csv
+      String pathname = "./bids.csv";
+      try{
+        File file = new File(pathname);
+        FileWriter fw;
+        //Append if the file already was created
+        if(file.exists())
+          fw = new FileWriter(file, true);
+        else{
+          file.createNewFile();
+          fw = new FileWriter(file);
         }
+
+        //Create a tuple to add to the csv file
+        for (int i = 0; i < nodes.getLength(); i++) {
+          Element e = (Element) nodes.item(i);
+          NodeList bids = getElementByTagNameNR(e, "Bids").getElementsByTagName("Bid");
+          for (int j = 0; j < bids.getLength(); j++) {
+            String row = "";
+            Element b = (Element) bids.item(j);
+            
+            row += tuplify(e.getAttribute("ItemID")) + ",";
+            row += tuplify(getElementByTagNameNR(b, "Bidder").getAttribute("UserID")) + ",";
+            row += tuplify(timify(getElementTextByTagNameNR(b, "Time"))) + ",";
+            row += tuplify(strip(getElementTextByTagNameNR(b, "Amount"))) + "\n";
+
+            fw.write(row);
+          }
+        }
+        fw.close();
+      }
+
+      catch(IOException ex){
+            System.out.println("FAILED: cannot open the file::" + pathname);
+            return;
       }
     }
 
     public static void process_categories(NodeList nodes) {
-      for (int i = 0; i < nodes.getLength(); i++) {
-        Element e = (Element) nodes.item(i);
-        NodeList cats = e.getElementsByTagName("Category");
-        for (int j = 0; j < cats.getLength(); j++) {
-          String row = "";
-          Element c = (Element) cats.item(j);
-
-          row += tuplify(e.getAttribute("ItemID")) + ",";
-          row += tuplify(getElementText(c));// + "\n";
-
-          System.out.println(row);
+      //Attempt to create categories.csv
+      String pathname = "./categories.csv";
+      try{
+        File file = new File(pathname);
+        FileWriter fw;
+        //Append if the file already was created
+        if(file.exists())
+          fw = new FileWriter(file, true);
+        else{
+          file.createNewFile();
+          fw = new FileWriter(file);
         }
+
+        //Create a tuple to add to the csv file
+        for (int i = 0; i < nodes.getLength(); i++) {
+          Element e = (Element) nodes.item(i);
+          NodeList cats = e.getElementsByTagName("Category");
+          for (int j = 0; j < cats.getLength(); j++) {
+            String row = "";
+            Element c = (Element) cats.item(j);
+
+            row += tuplify(e.getAttribute("ItemID")) + ",";
+            row += tuplify(getElementText(c)) + "\n";
+            fw.write(row);
+          } 
+        }
+        fw.close();
+      }
+
+      catch(IOException ex){
+            System.out.println("FAILED: cannot open the file::" + pathname);
+            return;
       }
     }
 
