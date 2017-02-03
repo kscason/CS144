@@ -1,6 +1,6 @@
 README.txt
-
-Kaitlyn Cason 204411394
+kaitlyn cason : 204411394
+alexander waz : 504480512
 
 Part B:
 

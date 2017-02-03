@@ -63,9 +63,9 @@ class User {
   }
 
   public String stringify() {
-    return "|" + userID_ + "|*"
-                + Location_ + "*" + Country_ + "*"
-                + S_Rating_ + "*" + B_Rating_;
+    return "`" + userID_ + "`|"
+                + Location_ + "|" + Country_ + "|"
+                + S_Rating_ + "|" + B_Rating_;
   }
 }
 
@@ -231,7 +231,7 @@ class MyParser {
     }
     
     public static String tuplify(String s) {
-      return s == "" ? "\\N" : "|" + s + "|";
+      return s == "" ? "\\N" : "`" + s + "`";
     }
 
     public static String timify(String t) {
@@ -264,19 +264,19 @@ class MyParser {
           String row = "";
           Element e = (Element) nodes.item(i);
           
-          row += tuplify(e.getAttribute("ItemID")) + "*";
-          row += tuplify(getElementTextByTagNameNR(e, "Name")) + "*";
-          row += tuplify(strip(getElementTextByTagNameNR(e, "Currently"))) + "*";
-          row += tuplify(strip(getElementTextByTagNameNR(e, "Buy_Price"))) + "*";
-          row += tuplify(strip(getElementTextByTagNameNR(e, "First_Bid"))) + "*";
-          row += tuplify(getElementTextByTagNameNR(e, "Number_of_Bids")) + "*";
-          row += tuplify(getElementTextByTagNameNR(e, "Location")) + "*";
-          row += tuplify(getElementByTagNameNR(e, "Location").getAttribute("Latitude")) + "*";
-          row += tuplify(getElementByTagNameNR(e, "Location").getAttribute("Longitude")) + "*";
-          row += tuplify(getElementTextByTagNameNR(e, "Country")) + "*";
-          row += tuplify(timify(getElementTextByTagNameNR(e, "Started"))) + "*";
-          row += tuplify(timify(getElementTextByTagNameNR(e, "Ends"))) + "*";
-          row += tuplify(getElementByTagNameNR(e, "Seller").getAttribute("UserID")) + "*";
+          row += tuplify(e.getAttribute("ItemID")) + "|";
+          row += tuplify(getElementTextByTagNameNR(e, "Name")) + "|";
+          row += tuplify(strip(getElementTextByTagNameNR(e, "Currently"))) + "|";
+          row += tuplify(strip(getElementTextByTagNameNR(e, "Buy_Price"))) + "|";
+          row += tuplify(strip(getElementTextByTagNameNR(e, "First_Bid"))) + "|";
+          row += tuplify(getElementTextByTagNameNR(e, "Number_of_Bids")) + "|";
+          row += tuplify(getElementTextByTagNameNR(e, "Location")) + "|";
+          row += tuplify(getElementByTagNameNR(e, "Location").getAttribute("Latitude")) + "|";
+          row += tuplify(getElementByTagNameNR(e, "Location").getAttribute("Longitude")) + "|";
+          row += tuplify(getElementTextByTagNameNR(e, "Country")) + "|";
+          row += tuplify(timify(getElementTextByTagNameNR(e, "Started"))) + "|";
+          row += tuplify(timify(getElementTextByTagNameNR(e, "Ends"))) + "|";
+          row += tuplify(getElementByTagNameNR(e, "Seller").getAttribute("UserID")) + "|";
           row += tuplify(getElementTextByTagNameNR(e, "Description")) + "\n";
           
           fw.write(row);
@@ -326,7 +326,9 @@ class MyParser {
           }
         }
       }
+    }
 
+    public static void csv_users(){
       //Attempt to create users csv
       String pathname = "./users.csv";
       try{
@@ -376,9 +378,9 @@ class MyParser {
             String row = "";
             Element b = (Element) bids.item(j);
             
-            row += tuplify(e.getAttribute("ItemID")) + "*";
-            row += tuplify(getElementByTagNameNR(b, "Bidder").getAttribute("UserID")) + "*";
-            row += tuplify(timify(getElementTextByTagNameNR(b, "Time"))) + "*";
+            row += tuplify(e.getAttribute("ItemID")) + "|";
+            row += tuplify(getElementByTagNameNR(b, "Bidder").getAttribute("UserID")) + "|";
+            row += tuplify(timify(getElementTextByTagNameNR(b, "Time"))) + "|";
             row += tuplify(strip(getElementTextByTagNameNR(b, "Amount"))) + "\n";
 
             fw.write(row);
@@ -415,7 +417,7 @@ class MyParser {
             String row = "";
             Element c = (Element) cats.item(j);
 
-            row += tuplify(e.getAttribute("ItemID")) + "*";
+            row += tuplify(e.getAttribute("ItemID")) + "|";
             row += tuplify(getElementText(c)) + "\n";
             fw.write(row);
           } 
@@ -457,5 +459,6 @@ class MyParser {
             File currentFile = new File(args[i]);
             processFile(currentFile);
         }
+        csv_users();
     }
 }

@@ -7,7 +7,8 @@ CREATE TABLE User(
 		Location VARCHAR(400), 
 		Country VARCHAR(400), 
 		S_Rating INT, 
-		B_Rating INT
+		B_Rating INT,
+		PRIMARY KEY(UserID)
 );
 
 CREATE TABLE Item(
@@ -25,7 +26,8 @@ CREATE TABLE Item(
 		Ends TIMESTAMP NOT NULL, 
 		UserID VARCHAR(40) NOT NULL, 
 		Description VARCHAR(4000) NOT NULL,
-		PRIMARY KEY(ItemID)
+		PRIMARY KEY(ItemID),
+		FOREIGN KEY(UserID) REFERENCES User(UserID)
 );
 
 CREATE TABLE Bid(
@@ -33,11 +35,14 @@ CREATE TABLE Bid(
 		UserID VARCHAR(40) NOT NULL, 
 		Time TIMESTAMP NOT NULL, 
 		Amount DECIMAL(8,2) NOT NULL,
-		PRIMARY KEY(ItemID, UserID, Time)
+		PRIMARY KEY(ItemID, UserID, Time),
+		FOREIGN KEY(UserID) REFERENCES User(UserID),
+		FOREIGN KEY(ItemID) REFERENCES Item(ItemID)
 );
 
 CREATE TABLE Category(
 		ItemID INT NOT NULL, 
 		Category VARCHAR(400) NOT NULL,
-		PRIMARY KEY(ItemID, Category)
+		PRIMARY KEY(ItemID, Category),
+		FOREIGN KEY(ItemID) REFERENCES Item(ItemID)
 );
