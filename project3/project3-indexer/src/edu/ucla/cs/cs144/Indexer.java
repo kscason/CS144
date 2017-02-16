@@ -34,7 +34,7 @@ public class Indexer {
     //Create one so we can send some queries
     public IndexWriter getIndexWriter(boolean create) throws IOException {
         if (indexWriter == null) {
-            Directory indexDir = FSDirectory.open(new File("index-directory"));
+            Directory indexDir = FSDirectory.open(new File("/var/lib/lucene/index1/"));
             IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_4_10_2, new StandardAnalyzer());
             indexWriter = new IndexWriter(indexDir, config);
         }
@@ -68,7 +68,7 @@ public class Indexer {
         writer.addDocument(doc);
     }
 
-    public String getCategories(ResultSet categories) throws SQLException {
+    private String getCategories(ResultSet categories) throws SQLException {
         StringBuilder sb = new StringBuilder();
         while(categories.next()){
             sb.append(" " + categories.getString("Category"));
