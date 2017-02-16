@@ -48,10 +48,9 @@ public class Indexer {
         }
     }
 
-    //TODO: create Item object and have it get stuff!!
     public void indexItem(String itemID, String name, String description, String categories) throws IOException {
 
-        System.out.println("Indexing item: " + itemID + " " + name + " " + categories);
+        //System.out.println("Indexing item: " + itemID + " " + name + " " + categories);
         IndexWriter writer = getIndexWriter(false);
         Document doc = new Document();
 
@@ -92,12 +91,12 @@ public class Indexer {
         //Erase existing index
         getIndexWriter(true);
 
-        //TODO CHECK: QUERY for items
+        //Execute queries for items
         Statement s = conn.createStatement();
         ResultSet items = s.executeQuery(itemQ);
         preparedCategories = conn.prepareStatement(catQ);
 
-        //TODO:Index all Items
+        //Index all Items
         while(items.next()){
             //Get item attributes
             id = items.getString("ItemID");
@@ -107,7 +106,7 @@ public class Indexer {
             //Set the ItemID for category query
             preparedCategories.setInt(1, items.getInt("ItemID"));
 
-            //TODO CHECK: get categories per item
+            //Get categories per item
             ResultSet categories = preparedCategories.executeQuery();
             all_categories = getCategories(categories);
             categories.close();
