@@ -51,7 +51,7 @@ public class Indexer {
     //TODO: create Item object and have it get stuff!!
     public void indexItem(String itemID, String name, String description, String categories) throws IOException {
 
-        System.out.println("Indexing item: " + itemID + " " + name);
+        System.out.println("Indexing item: " + itemID + " " + name + " " + categories);
         IndexWriter writer = getIndexWriter(false);
         Document doc = new Document();
 
@@ -64,15 +64,15 @@ public class Indexer {
         doc.add(new TextField("category", categories, Field.Store.NO));
 
         //Full searchable text is name, description, and category
-        String fullSearchableText = name + " " + description + " " + all_categories;
+        String fullSearchableText = name + " " + description + " " + categories;
         doc.add(new TextField("content", fullSearchableText, Field.Store.NO));
         writer.addDocument(doc);
     }
 
-    public String getCategories(ResultSet categories){
-        StringBuilder sb = new Stringbuilder();
+    public String getCategories(ResultSet categories) throws SQLException {
+        StringBuilder sb = new StringBuilder();
         while(categories.next()){
-            sb.append(categories.getString("Category"));
+            sb.append(" " + categories.getString("Category"));
         }
         return sb.toString();
     }
@@ -105,10 +105,10 @@ public class Indexer {
             description = items.getString("Description");
 
             //Set the ItemID for category query
-            preparedStatement.setInt(1, items.getInt("ItemID"));
+            preparedCategories.setInt(1, items.getInt("ItemID"));
 
             //TODO CHECK: get categories per item
-            ResultSet categories = preparedCategories.executeUpdate();
+            ResultSet categories = preparedCategories.executeQuery();
             all_categories = getCategories(categories);
             categories.close();
 
@@ -123,8 +123,6 @@ public class Indexer {
         closeIndexWriter();
         conn.close();
 
-	} catch (ClassNotFoundException ex){
-        System.out.println(ex);
     } catch (SQLException ex){
         System.out.println("SQLException caught");
         System.out.println("---");
@@ -135,10 +133,9 @@ public class Indexer {
             System.out.println("---");
             ex = ex.getNextException();
         }
-   }
-
-        
-
+    } catch (IOException ex){
+            ex.printStackTrace();
+    }
     }    
 
     public static void main(String args[]) {
