@@ -60,7 +60,7 @@ public class AuctionSearch implements IAuctionSearch {
         SearchEngine se = new SearchEngine();
         topDocs = se.performSearch(query, numResultsToSkip + numResultsToReturn);
 
-        //System.out.println("Results found: " + topDocs.totalHits);
+        System.out.println("Results found: " + topDocs.totalHits);
         
         //Grab the results from the topDocs
         ScoreDoc[] hits = topDocs.scoreDocs;
