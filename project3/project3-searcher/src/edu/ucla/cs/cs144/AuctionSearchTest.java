@@ -25,7 +25,8 @@ public class AuctionSearchTest {
 		}
 		
 		SearchRegion region =
-		    new SearchRegion(33.774, -118.63, 34.201, -117.38); 
+		  new SearchRegion(40, -90, 50, -100);  
+      //new SearchRegion(33.774, -118.63, 34.201, -117.38); 
 		SearchResult[] spatialResults = as.spatialSearch("camera", region, 0, 20);
 		System.out.println("Spatial Seacrh");
 		System.out.println("Received " + spatialResults.length + " results");
