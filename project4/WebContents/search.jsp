@@ -8,6 +8,7 @@
             Search for items: <input type="text" name="q">
             <input type="hidden" name="skip" value = "0">
             <input type="hidden" name="howMany" value = "20">
+            <input type="submit" /> <br /> 
         </form>
     </body>
 </html>

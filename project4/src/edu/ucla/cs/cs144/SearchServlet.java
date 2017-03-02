@@ -16,16 +16,39 @@ public class SearchServlet extends HttpServlet implements Servlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         // your codes here
+        //Set page title to title_
         request.setAttribute("title", title_);
         
         
+        //Forward request to JSP page
         if (request.getParameter("q") == null || request.getParameter("q") == "") { 
           request.getRequestDispatcher("/search.jsp").forward(request, response);
           return;
         }
 
+        //This is the search query
         String search = request.getParameter("q");
         request.setAttribute("search", search);
+
+        //Get number to skip and return
+        int numResultsToSkip = 0;
+        int numResultsToReturn = 0;
+        String nrts = request.getParameter("skip");
+        String nrtr = request.getParameter("howMany");
+
+        if(nrts != NULL)
+            numResultsToSkip = Integer.parseInt(nrts);
+        if(nrtr != NULL)
+            numResultsToReturn = Integer.parseInt(nrtr);
+
+        request.setAttribute("skip", numResultsToSkip);
+        request.setAttribute("howMany", numResultsToReturn);
+
+
+        //Do auction search, set results to request
+        SearchResult[] results = AuctionSearch.basicSearch(search, numResultsToSkip, numResultsToReturn);
+        
+        request.setAttribute("result", results);
 
         //SearchResult[] results = AuctionSearch::basicSearch(search, 0, 1);
         //request.setAttribute("result", results[0].getName());
