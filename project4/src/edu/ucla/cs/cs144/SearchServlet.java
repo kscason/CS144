@@ -20,7 +20,7 @@ public class SearchServlet extends HttpServlet implements Servlet {
         request.setAttribute("title", title_);
         
         
-        //Forward request to JSP page
+        //Forward request to JSP page (the first time page)
         if (request.getParameter("q") == null || request.getParameter("q") == "") { 
           request.getRequestDispatcher("/search.jsp").forward(request, response);
           return;
@@ -36,9 +36,9 @@ public class SearchServlet extends HttpServlet implements Servlet {
         String nrts = request.getParameter("skip");
         String nrtr = request.getParameter("howMany");
 
-        if(nrts != NULL)
+        if(nrts != null)
             numResultsToSkip = Integer.parseInt(nrts);
-        if(nrtr != NULL)
+        if(nrtr != null)
             numResultsToReturn = Integer.parseInt(nrtr);
 
         request.setAttribute("skip", numResultsToSkip);

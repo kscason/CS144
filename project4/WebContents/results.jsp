@@ -1,9 +1,9 @@
 <%@ page import="edu.ucla.cs.cs144.*" %>
 
 <%
-    int skipped = Integer.parseInt(request.getAttribute("skip"));
-    int returned = Integer.parseInt(request.getAttribute("howMany"));
-    String query = request.getAttribute("q");
+    int skipped = Integer.parseInt(request.getParameter("skip").toString());
+    int returned = Integer.parseInt(request.getParameter("howMany").toString());
+    String query = request.getParameter("q").toString();
 %>
 
 <html>
@@ -23,17 +23,17 @@
             <ul>
                 <%  
                 for(SearchResult r : rs) { %>
-                    <li>Item <%= r.getItemId() %>: <%=  r.getName() %> </li>
+                    <li><a href="/eBay/item?id=<%= r.getItemId() %>">Item <%= r.getItemId() %></a>: <%=  r.getName() %> </li>
                 <% } %>
             </ul>
 
         <br />
-        <% if(skipped > 0)
-            <a href= "/eBay/search?q=<%= query %>&skip=<%= (skipped-returned) >= 0 ? skipped-returned : 0 %>">Previous Page </a>
-        %>
-        <% if(rs.length == returned)
-            <a href="/eBay/search?q=<%= query %>&skip=<%= skipped+returned) %>">Next Page </a>
+        <% if(skipped > 0){ %>
+            <a href= "/eBay/search?q=<%= query %>&skip=<%= skipped-returned >= 0 ? skipped-returned : 0 %>&howMany=<%= returned%>">Previous Page</a>
+        <%  } %>
 
-        %>
+        <% if(rs.length == returned){ %>
+            <a href="/eBay/search?q=<%= query %>&skip=<%= skipped+returned %>&howMany=<%= returned%>">Next Page </a>
+        <%  } %>
     </body>
 </html>
