@@ -4,11 +4,7 @@
     </head>
     <body>
         <h1> <%= request.getAttribute("title") %> </h1>
-        <form method = get action="item" >
-            Search for Item Info: <input type="text" name="id" value="">
-            <input type="hidden" name="skip" value = "0">
-            <input type="hidden" name="howMany" value = "20">
-            <input type="submit" /> <br /> 
-        </form>
+        <h2>ITEM DOES NOT EXIST :^(</h2>
+        <a href="search">&lt;&lt; Return to search page</a>
     </body>
 </html>

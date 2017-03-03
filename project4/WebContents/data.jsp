@@ -7,7 +7,7 @@
     </head>
     <body onLoad="initializeMap()">
         <h1> <%= request.getAttribute("title") %> </h1>
-
+        <a href="search">&lt;&lt; Return to search page</a>
         <x:parse xml="${data}" var="Data"/>
 
         <h1> Name: <x:out select="$Data/Item/Name" /> </h1>

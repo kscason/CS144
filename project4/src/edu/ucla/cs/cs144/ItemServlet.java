@@ -44,33 +44,14 @@ public class ItemServlet extends HttpServlet implements Servlet {
        
         //Do auction search, set results to request
         String data = AuctionSearch.getXMLDataForItemId(id);
+        if (data == null || data == "") {
+          request.getRequestDispatcher("/item.jsp").forward(request, response);
+          return;
+        }
+        
         request.setAttribute("data", data);
         request.getRequestDispatcher("/data.jsp").forward(request, response);
 
-        //SearchResult[] results = AuctionSearch::basicSearch(search, 0, 1);
-        //request.setAttribute("result", results[0].getName());
-        /*
-        try {
-          // similar to project 2
-          DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-          factory.setValidating(false);
-          factory.setIgnoringElementContentWhitespace(true);      
-          DocumentBuilder builder = factory.newDocumentBuilder();
-          InputSource source = new InputSource(new StringReader(data));
-          Document doc = null;                                                                    
-          doc = builder.parse(source);
-
-          request.setAttribute("name", doc.getElementsByTagName("Name").item(0).getTextContent());
-
-
-
-          request.getRequestDispatcher("/data.jsp").forward(request, response);
-          return;
-        } catch(Exception e) {
-          e.printStackTrace();
-        }
-        request.getRequestDispatcher("/item.jsp").forward(request, response);
-        */
     }
 
     private String title_ = "Kaitlyn and Alex love eBay, the search engine that doesn't provide XML dumps... we're just so ~user friendly~";
