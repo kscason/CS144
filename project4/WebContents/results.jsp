@@ -11,7 +11,7 @@
         <title> <%= request.getAttribute("title") %> </title>
         <script type="text/javascript" src="autosuggest.js"></script>
         <script type="text/javascript" src="suggestions.js"></script>
-        <link rel="stylesheet" type="text/css" src="autosuggest.css" />
+        <link rel="stylesheet" type="text/css" href="autosuggest.css" />
         <script type="text/javascript">
             window.onload = function () {
                 var oTextbox = new AutoSuggestControl(document.getElementById("searchbox"), new XMLSuggestions()); 
