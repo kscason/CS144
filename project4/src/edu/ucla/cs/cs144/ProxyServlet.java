@@ -2,6 +2,7 @@ package edu.ucla.cs.cs144;
 
 import java.io.BufferedReader;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
@@ -28,7 +29,7 @@ public class ProxyServlet extends HttpServlet implements Servlet {
        		return;
 
        	//Create URL and open the connection
-       	String toURL = "http://google.com/complete/search?output=toolbar&q=" + query;
+       	String toURL = "http://google.com/complete/search?output=toolbar&q=" + URLEncoder.encode(query, "UTF-8");
         URL url = new URL(toURL);
 
        	HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -50,8 +51,10 @@ public class ProxyServlet extends HttpServlet implements Servlet {
 
        	//Close and disconnect
        	try {
-           	if (br != null) 
+           	if(br != null) 
            		br.close();
+           	if(pw != null)
+           		pw.close();
        	} catch (IOException e) {
            	e.printStackTrace();
        	}
